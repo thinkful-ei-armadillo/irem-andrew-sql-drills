@@ -1,7 +1,8 @@
+'use strict';
 const ShoppingListService = {
-    getShoppingList(){
-        return 'all the items!'
-    }
-}
+  getShoppingList(db){
+    return db.select('*').from('shopping_list');
+  }
+};
 
-module.exports = ShoppingListService
+module.exports = ShoppingListService;

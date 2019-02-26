@@ -1,9 +1,13 @@
-require('dotenv').config()
-const knex = require('knex')
-const ShoppingListService = require('./shopping-list-service')
-const knexInstance = knex({
+'use strict';
+
+require('dotenv').config();
+const knex = require('knex');
+const ShoppingListService = require('./shopping-list-service');
+const db = knex({
   client: 'pg',
   connection: process.env.DB_URL,
-})
+});
 
-console.log(ShoppingListService.getShoppingList())
+ShoppingListService
+  .getShoppingList(db)
+  .then(res => console.log(res));
