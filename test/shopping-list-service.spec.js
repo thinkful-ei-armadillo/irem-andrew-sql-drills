@@ -8,19 +8,19 @@ describe("Shopping list service object", function() {
   let db;
   const testItems = [
       
-    { id: 7,
+    { id: 1,
         name: 'Steak-believe',
         price: 6,
         date_added: new Date('2019-02-17T16:57:21.235Z'),
         checked: false,
         category: 'Main' },
-      { id: 8,
+      { id: 2,
         name: 'Kale Seitan',
         price: 7,
         date_added: new Date('2019-02-17T16:57:21.235Z'),
         checked: false,
         category: 'Breakfast' },
-      { id: 9,
+      { id: 3,
         name: 'NoBull Burger',
         price: 2,
         date_added: new Date('2019-02-17T16:57:21.235Z'),
@@ -34,7 +34,7 @@ describe("Shopping list service object", function() {
       connection: process.env.TEST_DB_URL
     });
   });
-  before("run before all tests", () => {
+  before(() => {
     db("shopping_list").truncate();
   });
 
@@ -45,17 +45,35 @@ describe("Shopping list service object", function() {
 //     });
 //   });
 
-  afterEach("run after each test", () => {
+  afterEach(() => {
     db("shopping_list").truncate();
   });
 
-  after("run after all tests", () => db.destroy());
+  after(() => db.destroy());
 
   context('inserting data', () =>{
       beforeEach(() =>{
           return db.into('shopping_list').insert(testItems)
       })
-  })
+      it("should add an item", () => {
+        const newItem = {
+          name: "Test name",
+          price: 7,
+          date_added: new Date("2020-01-01T00:00:00.000Z"),
+          checked: true,
+          category: "Breakfast"
+        };
+        return ShoppingListService.addItem(db, newItem).then(actual => {
+          expect(actual).to.eql({
+            id: 4,
+            name: newItem.name,
+            price: newItem.price,
+            date_added: newItem.date_added,
+            checked: newItem.checked,
+            category: newItem.category
+          });
+        });
+      });
   
 
   it("should show data", () => {
@@ -64,25 +82,7 @@ describe("Shopping list service object", function() {
     });
   });
 
-  it("should add an item", () => {
-    const newItem = {
-      name: "Test name",
-      price: 7,
-      date_added: new Date("2020-01-01T00:00:00.000Z"),
-      checked: true,
-      category: "Breakfast"
-    };
-    return ShoppingListService.addItem(db, newItem).then(actual => {
-      expect(actual).to.eql({
-        id: 1,
-        name: newItem.name,
-        price: newItem.price,
-        date_added: newItem.date_added,
-        checked: newItem.checked,
-        category: newItem.category
-      });
-    });
-  });
+
   it('get all items', ()=>{
     return ShoppingListService
         .getShoppingList(db)
@@ -90,4 +90,6 @@ describe("Shopping list service object", function() {
             expect(results).to.eql(testItems)
         })
   })
+})
+
 });
