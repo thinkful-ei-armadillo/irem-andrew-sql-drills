@@ -8,6 +8,4 @@ const db = knex({
   connection: process.env.DB_URL,
 });
 
-ShoppingListService
-  .getShoppingList(db)
-  .then(res => console.log(res));
+
